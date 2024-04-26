@@ -126,7 +126,7 @@ class MotionStageController():
 		if abs(step)>self.big_step_threshold:
 			raise Exception('Too big of a step. Dangerous!')
 			
-		result=lib.command_movr(device_id,step,0)
+		result=lib.command_movr(device_id,step,0)  
 		self.wait_for_stop(device_id)		
 		self.get_position(device_id)
 		

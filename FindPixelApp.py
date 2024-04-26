@@ -12,14 +12,12 @@ import matplotlib.pyplot as plt
 
 import importlib
 import threading
-from Agilent_oscilloscope import agilent_mso6104A
 import LaserScanImporter
 from colorama import init,Fore,Style
 
 init(convert=True)
 
 
-osc=agilent_mso6104A()
 cache_dir='.\\Cache'
 data_dir='.\\data'
 if not os.path.exists(cache_dir):
@@ -140,7 +138,6 @@ class TwoDScan(QWidget):
 		self.canvas.setFixedHeight(300)
 		self.toolbar = NavigationToolbar(self.canvas, self)
 		self.button_plot = QPushButton('Run')
-		self.button_plot.clicked.connect(self.run_scan)
 		self.twodscan_parameters=TwoDScanParamters()
 		self.event_stop=threading.Event()
 		
@@ -165,19 +162,10 @@ class TwoDScan(QWidget):
 	def thread_complete(self):
 		self.button_plot.setEnabled(True)
 		
-	def run_scan(self):
-			self.event_stop.clear()
-			worker = Worker(self.run_scan_raw) # Any other args, kwargs are passed to the run function
-			#worker.signals.result.connect(self.print_output)
-			worker.signals.finished.connect(self.thread_complete)
-			#worker.signals.progress.connect(self.progress_fn)
-			
-			self.threadpool.start(worker)
 	def stop(self):
 		self.event_stop.set()
 		print(Fore.RED+'Scan stopped!',Style.RESET_ALL)
 	
-	def run_scan_raw(self,progress_callback):
 		self.button_plot.setEnabled(False)
 		
 		spaces,h_return,v_return=self.get_scanning_space()
